@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Contatos";
+}
+@model CRUDContatos.Models.ContatoCriacaoEdicao
+<div class="text-center">
+	<a asp-controller="Contato" asp-action="Index" class="btn btn-secondary">Voltar</a>
+	<h1 class="display-4">Criar novo contato</h1>
+</div>
+
+<form asp-action="CriarContato" asp-controller="Contato">
+    <label>Nome</label>
+    <input asp-for="Nome" class="form-control" placeholder="Nome completo"/>
+
+    <div id="emails-container">
+        <label>Emails</label>
+        <div class="row mb-2">
+            <div class="col-10">
+                <input name="ListaEmails" type="email" placeholder="Digite um e-mail" class="form-control" />
+            </div>
+            <div class="col-1" id="btn-adicionar-email">
+                <button type="button" onclick="adicionarEmailLista(this)" class="btn btn-success w-100">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            </div>
+            <div class="col-1">
+                <button type="button" onclick="removerEmail(this)" class="btn btn-danger w-100">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <label>Telefone pessoal</label>
+    <input asp-for="TelefonePessoal" class="form-control" placeholder="(00) 99999-9999"/>
+    <label>Telefone comercial</label>
+    <input asp-for="TelefoneComercial" class="form-control" placeholder="(00) 3333-3333" />
+    <label>Empresa</label>
+    <input asp-for="Empresa" class="form-control" placeholder="Nome da empresa" />
+
+    <button type="submit" class="btn btn-primary mt-3">Criar</button>
+</form>
+
+
+@section Scripts {
+    <script>
+        function adicionarEmailLista(btn) {
+            const row = btn.closest('.row');
+            const novo = row.cloneNode(true);
+            novo.querySelector('input[name="ListaEmails"]').value = '';
+            document.getElementById('emails-container').appendChild(novo);
+        }
+
+        function removerEmail(btn) {
+            const container = document.getElementById('emails-container');
+            const rows = container.querySelectorAll('.row');
+            if (rows.length > 1) 
+                btn.closest('.row').remove();
+            else 
+                btn.closest('.row').querySelector('input[name="ListaEmails"]').value = '';
+            
+        }
+    </script>
+}
