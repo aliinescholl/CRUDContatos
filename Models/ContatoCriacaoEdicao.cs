@@ -10,5 +10,10 @@ namespace CRUDContatos.Models
         public string? TelefonePessoal { get; set; }
         public string? TelefoneComercial { get; set; }
         public string? Empresa { get; set; }
+
+        public void SepararEmailsPorPontoVirgula(string emails)
+        {
+            ListaEmails = emails?.Split(';');
+        }
     }
 }

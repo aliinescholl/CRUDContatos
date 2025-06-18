@@ -52,47 +52,6 @@
 
 @section Scripts {
     <script>
-        function atualizarBotoesEmail() {
-            var rows = document.querySelectorAll('#emails-container .row');
-            rows.forEach(function (row, idx) {
-                var btnCol = row.querySelector('.col-2');
-                btnCol.innerHTML = '';
-
-                if (rows.length === 1) {
-                    btnCol.innerHTML = `<button type="button" onclick="adicionarEmailLista()" class="btn btn-success col-6">
-                        <i class="bi bi-plus-lg"></i>
-                    </button>`;
-                } else if (idx === rows.length - 1) {
-                    btnCol.innerHTML =
-                        `<button type="button" onclick="adicionarEmailLista()" class="btn btn-success me-1 col-6">
-                            <i class="bi bi-plus-lg"></i>
-                        </button>
-                        <button type="button" onclick="removerEmail(this)" class="btn btn-danger col-6">
-                            <i class="bi bi-trash"></i>
-                        </button>`;
-                } else {
-                    btnCol.innerHTML = `<button type="button" onclick="removerEmail(this)" class="btn btn-danger col-12">
-                        <i class="bi bi-trash"></i>
-                    </button>`;
-                }
-            });
-        }
-
-        function adicionarEmailLista() {
-            var container = document.getElementById('emails-container');
-            var rows = container.querySelectorAll('.row');
-            var novo = rows[rows.length - 1].cloneNode(true);
-            novo.querySelector('input[name="ListaEmails"]').value = '';
-            container.appendChild(novo);
-            atualizarBotoesEmail();
-        }
-
-        function removerEmail(btn) {
-            var row = btn.closest('.row');
-            row.remove();
-            atualizarBotoesEmail();
-        }
-
         document.addEventListener('DOMContentLoaded', atualizarBotoesEmail);
     </script>
 }

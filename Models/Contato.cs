@@ -11,10 +11,5 @@
         public string? TelefonePessoal { get; set; }
         public string? TelefoneComercial { get; set; }
         public string? Empresa { get; set; }
-
-        public string[] ObterEmails()
-        {
-            return Emails?.Split(';') ?? Array.Empty<string>();
-        }
     }
 }

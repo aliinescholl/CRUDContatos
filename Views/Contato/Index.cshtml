@@ -8,8 +8,8 @@
 </div>
 
 <div>
-	<label>Pesquisar</label>
-	<input type="text" id="pesquisa" class="form-control" onkeyup="carregarContatos()" />
+    <label>Pesquisar</label>
+    <input type="text" id="pesquisa" class="form-control" onkeyup="carregarContatos()" />
 </div>
 
 <table class="table mt-4" id="tabela-contatos">
@@ -24,54 +24,96 @@
         </tr>
     </thead>
     <tbody>
+        @* aqui é possível utilizar um foreach e usar asp-action e asp-route-id pra poder redirecionar conforme a necessidade *@
+        @* mas a proposta é utilizar o ajax pra trazer os dados e popular a tabela *@
     </tbody>
 </table>
 
 @section Scripts {
     <script>
-        function carregarContatos() {
-            $.getJSON('/Contato/Listar', function (data) {
-                var tbody = $('#tabela-contatos tbody');
-                tbody.empty();
-                data.forEach(function (contato) {
-                    tbody.append(
-                        `<tr>
-                            <td>${contato.nome}</td>
-                            <td>${contato.telefonePessoal ?? ''}</td>
-                            <td>${contato.telefoneComercial ?? ''}</td>
-                            <td>${contato.empresa ?? ''}</td>
-                            <td>${contato.emails ? contato.emails.replaceAll(';', '<br/>') : ''}</td>
-                            <td>
-                                <a class="btn btn-warning btn-sm" href="/Contato/Editar/${contato.id}">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <button class="btn btn-danger btn-sm" onclick="excluirContato(${contato.id})">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>`
-                    );
-                });
+        // foi utilizada ajax somente na página de index já que é onde são carregados todos os dados então achei que
+        //  seria mais interessante o uso do ajax aqui
+
+        const PATHLISTAR = '/contato/listar';
+        const PATHEXCLUIR = '/contato/excluir';
+
+        // Função para carregar e exibir os contatos
+        async function carregarContatos() {
+            const config = {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            };
+
+            try {
+                const termo = document.getElementById('pesquisa').value.toLowerCase();
+                const response = await fetch(`${PATHLISTAR}?filtro=${termo}`, config);
+                    
+                if (!response.ok) 
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                
+                const dados = await response.json();
+                preencherTabela(dados);
+                return dados;
+            }
+            catch (err) {
+                console.error('Erro ao carregar contatos:', err);
+            }
+        }
+
+        // Função para preencher a tabela com os dados
+        function preencherTabela(contatos) {
+            // pega o componente tbody filho do componente que tem o id tabela-contatos
+            const tbody = document.querySelector('#tabela-contatos tbody');
+            // limpa o conteúdo do tbody caso tenha
+            tbody.innerHTML = '';
+
+            contatos.forEach(contato => {
+                // cria o elemento tr para ser populado
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${contato.nome || ''}</td>
+                    <td>${contato.telefonePessoal || ''}</td>
+                    <td>${contato.telefoneComercial || ''}</td>
+                    <td>${contato.empresa || ''}</td>
+                    <td>${contato.emails ? contato.emails.replaceAll(';', '<br/>') : ''}</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm" href="/contato/editar/${contato.id}">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm" onclick="excluirContato(${contato.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
             });
         }
 
+        // Função para excluir contato
         function excluirContato(id) {
+            const config = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            };
             if (confirm('Deseja realmente excluir este contato?')) {
-                $.ajax({
-                    url: '/Contato/Excluir/' + id,
-                    type: 'POST',
-                    success: function () {
-                        carregarContatos();
-                    },
-                    error: function () {
-                        alert('Erro ao excluir o contato.');
-                    }
+                fetch(`${PATHEXCLUIR}/${id}`, config)
+                .then(response => {
+                    if (!response.ok) 
+                        throw new Error('Erro ao excluir contato');
+                    
+                    return response.json();
+                })
+                .then(() => {
+                    carregarContatos();
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao excluir o contato.');
                 });
             }
         }
 
-        $(function () {
-            carregarContatos();
-        });
+        // carrega os contatos quando o conteúdo da dom é carregado
+        document.addEventListener('DOMContentLoaded', carregarContatos);
     </script>
 }

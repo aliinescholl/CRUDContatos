@@ -1,7 +1,6 @@
 ﻿using CRUDContatos.Data;
 using CRUDContatos.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CRUDContatos.Controllers
 {
@@ -14,19 +13,46 @@ namespace CRUDContatos.Controllers
             _context = context;
         }
 
-        // 
-        // GET: /Contato/
+        /// <summary>
+        /// Busca a view da index e os dados na tabela contato
+        /// </summary>
+        /// <returns>Retorna a view da index</returns>
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            return View(_context.Contato.ToList());
         }
 
-        // GET: /Contato/Criar
+        /// <summary>
+        /// Busca os registros de acordo com o filtro
+        /// </summary>
+        /// <returns>Retorna os registros em json</returns>
+        [HttpGet]
+        public IActionResult Listar(string? filtro)
+        {
+            if (filtro != null && filtro.Length > 0)
+                return Json(_context.Contato
+                    .Where(c => 
+                        c.TelefonePessoal.Contains(filtro)
+                        || c.TelefoneComercial.Contains(filtro)
+                        || c.Nome.Contains(filtro)
+                        || c.Empresa.Contains(filtro)
+                        || c.Emails.Contains(filtro)
+                        ).ToList());
+            else
+                return Json(_context.Contato.ToList());
+        }
+
+        /// <returns>Retorna a view de criação do contato</returns>
         public IActionResult Criar()
         {
             return View();
         }
 
+        /// <summary>
+        /// Busca o registro com id passado por parametro para edição 
+        /// </summary>
+        /// <returns>Retorna a view com os dados do registro buscado</returns>
         public IActionResult Editar(int id)
         {
             var contato = _context.Contato.Find(id);
@@ -40,14 +66,19 @@ namespace CRUDContatos.Controllers
                 TelefonePessoal = contato.TelefonePessoal,
                 TelefoneComercial = contato.TelefoneComercial,
                 Empresa = contato.Empresa,
-                ListaEmails = contato.Emails?.Split(';')
             };
+
+            if (contato.Emails.Length > 0)
+                model.SepararEmailsPorPontoVirgula(contato.Emails);
 
             ViewBag.ContatoId = contato.Id;
             return View(model);
         }
 
-        // POST: /Contato/Editar/5
+        /// <summary>
+        /// Edita o registro 
+        /// </summary>
+        /// <returns>Retorna para a index</returns>
         [HttpPost]
         public IActionResult Editar(int id, ContatoCriacaoEdicao model)
         {
@@ -71,7 +102,11 @@ namespace CRUDContatos.Controllers
             return RedirectToAction("Index");
         }
 
-        /// POST: /Contato/Criar
+        /// <summary>
+        /// Cria um novo contato a partir de um ContatoCriacaoEdicao e transforma em contato 
+        /// a partir de um mapeamento
+        /// </summary>
+        /// <returns>Retorna para o index</returns>
         [HttpPost]
         public IActionResult CriarContato(ContatoCriacaoEdicao contatoCriacaoEdicao)
         {
@@ -92,13 +127,9 @@ namespace CRUDContatos.Controllers
             return RedirectToAction("Index");
         }
 
-        // aqui vai ser adicionado o número da página e a string para o campo de filtro ambos não obrigatórios
-        [HttpGet]
-        public IActionResult Listar()
-        {
-            return Json(_context.Contato.ToList());
-        }
-
+        /// <summary>
+        /// Exclui o contato com id que é passado por parametro
+        /// </summary>
         [HttpPost]
         public IActionResult Excluir(int id)
         {
