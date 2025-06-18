@@ -1,0 +1,98 @@
+﻿@model CRUDContatos.Models.ContatoCriacaoEdicao
+@{
+    ViewData["Title"] = "Editar Contato";
+    var contatoId = ViewBag.ContatoId;
+}
+
+<div class="text-center">
+    <a asp-controller="Contato" asp-action="Index" class="btn btn-secondary">Voltar</a>
+    <h1 class="display-4">Editar contato</h1>
+</div>
+
+<form asp-action="Editar" asp-controller="Contato" asp-route-id="@contatoId" method="post">
+    <label>Nome</label>
+    <input asp-for="Nome" class="form-control" />
+
+    <div id="emails-container">
+        <label>Emails</label>
+        @if (Model.ListaEmails != null && Model.ListaEmails.Length > 0)
+        {
+            for (int i = 0; i < Model.ListaEmails.Length; i++)
+            {
+                <div class="row mb-2">
+                    <div class="col-10">
+                        <input name="ListaEmails" type="email" value="@Model.ListaEmails[i]" class="form-control" />
+                    </div>
+                    <div class="col-2 d-flex justify-content-center align-items-center">
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row mb-2">
+                <div class="col-10">
+                    <input name="ListaEmails" type="email" class="form-control" />
+                </div>
+                <div class="col-2 d-flex justify-content-center align-items-center">
+                </div>
+            </div>
+        }
+    </div>
+
+    <label>Telefone pessoal</label>
+    <input asp-for="TelefonePessoal" class="form-control" />
+    <label>Telefone comercial</label>
+    <input asp-for="TelefoneComercial" class="form-control" />
+    <label>Empresa</label>
+    <input asp-for="Empresa" class="form-control" />
+
+    <button type="submit" class="btn btn-success mt-3 col-12">Salvar</button>
+</form>
+
+@section Scripts {
+    <script>
+        function atualizarBotoesEmail() {
+            var rows = document.querySelectorAll('#emails-container .row');
+            rows.forEach(function (row, idx) {
+                var btnCol = row.querySelector('.col-2');
+                btnCol.innerHTML = '';
+
+                if (rows.length === 1) {
+                    btnCol.innerHTML = `<button type="button" onclick="adicionarEmailLista()" class="btn btn-success col-6">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>`;
+                } else if (idx === rows.length - 1) {
+                    btnCol.innerHTML =
+                        `<button type="button" onclick="adicionarEmailLista()" class="btn btn-success me-1 col-6">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                        <button type="button" onclick="removerEmail(this)" class="btn btn-danger col-6">
+                            <i class="bi bi-trash"></i>
+                        </button>`;
+                } else {
+                    btnCol.innerHTML = `<button type="button" onclick="removerEmail(this)" class="btn btn-danger col-12">
+                        <i class="bi bi-trash"></i>
+                    </button>`;
+                }
+            });
+        }
+
+        function adicionarEmailLista() {
+            var container = document.getElementById('emails-container');
+            var rows = container.querySelectorAll('.row');
+            var novo = rows[rows.length - 1].cloneNode(true);
+            novo.querySelector('input[name="ListaEmails"]').value = '';
+            container.appendChild(novo);
+            atualizarBotoesEmail();
+        }
+
+        function removerEmail(btn) {
+            var row = btn.closest('.row');
+            row.remove();
+            atualizarBotoesEmail();
+        }
+
+        document.addEventListener('DOMContentLoaded', atualizarBotoesEmail);
+    </script>
+}

@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Contatos";
+}
+
+<div class="text-center row d-flex">
+    <h1 class="display-4 col-10">Contatos</h1>
+    <a asp-controller="Contato" asp-action="Criar" class="btn btn-success col-2" style="height: 50px; margin-top: 20px">Criar</a>
+</div>
+
+<div>
+	<label>Pesquisar</label>
+	<input type="text" id="pesquisa" class="form-control" onkeyup="carregarContatos()" />
+</div>
+
+<table class="table mt-4" id="tabela-contatos">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Telefone Pessoal</th>
+            <th>Telefone Comercial</th>
+            <th>Empresa</th>
+            <th>Emails</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function carregarContatos() {
+            $.getJSON('/Contato/Listar', function (data) {
+                var tbody = $('#tabela-contatos tbody');
+                tbody.empty();
+                data.forEach(function (contato) {
+                    tbody.append(
+                        `<tr>
+                            <td>${contato.nome}</td>
+                            <td>${contato.telefonePessoal ?? ''}</td>
+                            <td>${contato.telefoneComercial ?? ''}</td>
+                            <td>${contato.empresa ?? ''}</td>
+                            <td>${contato.emails ? contato.emails.replaceAll(';', '<br/>') : ''}</td>
+                            <td>
+                                <a class="btn btn-warning btn-sm" href="/Contato/Editar/${contato.id}">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn btn-danger btn-sm" onclick="excluirContato(${contato.id})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>`
+                    );
+                });
+            });
+        }
+
+        function excluirContato(id) {
+            if (confirm('Deseja realmente excluir este contato?')) {
+                $.ajax({
+                    url: '/Contato/Excluir/' + id,
+                    type: 'POST',
+                    success: function () {
+                        carregarContatos();
+                    },
+                    error: function () {
+                        alert('Erro ao excluir o contato.');
+                    }
+                });
+            }
+        }
+
+        $(function () {
+            carregarContatos();
+        });
+    </script>
+}
