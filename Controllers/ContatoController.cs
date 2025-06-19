@@ -130,7 +130,7 @@ namespace CRUDContatos.Controllers
         /// <summary>
         /// Exclui o contato com id que é passado por parametro
         /// </summary>
-        [HttpPost]
+        [HttpDelete]
         public IActionResult Excluir(int id)
         {
             var contato = _context.Contato.Find(id);

@@ -38,7 +38,7 @@
         const PATHEXCLUIR = '/contato/excluir';
 
         // Função para carregar e exibir os contatos
-        async function carregarContatos() {
+        const carregarContatos = async() => {
             const config = {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
@@ -61,7 +61,7 @@
         }
 
         // Função para preencher a tabela com os dados
-        function preencherTabela(contatos) {
+        const preencherTabela = (contatos) => {
             // pega o componente tbody filho do componente que tem o id tabela-contatos
             const tbody = document.querySelector('#tabela-contatos tbody');
             // limpa o conteúdo do tbody caso tenha
@@ -90,26 +90,26 @@
         }
 
         // Função para excluir contato
-        function excluirContato(id) {
-            const config = {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-            };
-            if (confirm('Deseja realmente excluir este contato?')) {
-                fetch(`${PATHEXCLUIR}/${id}`, config)
-                .then(response => {
-                    if (!response.ok) 
-                        throw new Error('Erro ao excluir contato');
-                    
-                    return response.json();
-                })
-                .then(() => {
+        const excluirContato = async(id) => {
+            if (confirm('Deseja realmente excluir este contato?')){
+                const config = {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                };
+
+                try {
+                    const termo = document.getElementById('pesquisa').value.toLowerCase();
+                    const response = await fetch(`${PATHEXCLUIR}/${id}`, config);
+
+                    if (!response.ok)
+                        throw new Error(`Erro HTTP: ${response.status}`);
+
                     carregarContatos();
-                })
-                .catch(error => {
+                }
+                catch (err) {
                     console.error('Erro:', error);
                     alert('Erro ao excluir o contato.');
-                });
+                }
             }
         }
 

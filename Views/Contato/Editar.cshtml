@@ -1,6 +1,6 @@
 ﻿@model CRUDContatos.Models.ContatoCriacaoEdicao
 @{
-    ViewData["Title"] = "Editar Contato";
+    ViewData["Title"] = "Editar - Contato";
     var contatoId = ViewBag.ContatoId;
 }
 
@@ -10,11 +10,11 @@
 </div>
 
 <form asp-action="Editar" asp-controller="Contato" asp-route-id="@contatoId" method="post">
-    <label>Nome</label>
+    <label for="Nome">Nome</label>
     <input asp-for="Nome" class="form-control" />
 
     <div id="emails-container">
-        <label>Emails</label>
+        <label for="Emails">Emails</label>
         @if (Model.ListaEmails != null && Model.ListaEmails.Length > 0)
         {
             for (int i = 0; i < Model.ListaEmails.Length; i++)
@@ -40,11 +40,11 @@
         }
     </div>
 
-    <label>Telefone pessoal</label>
+    <label for="Telefone pessoal">Telefone pessoal</label>
     <input asp-for="TelefonePessoal" class="form-control" />
-    <label>Telefone comercial</label>
+    <label for="Telefone comercial">Telefone comercial</label>
     <input asp-for="TelefoneComercial" class="form-control" />
-    <label>Empresa</label>
+    <label for="Nome da empresa">Empresa</label>
     <input asp-for="Empresa" class="form-control" />
 
     <button type="submit" class="btn btn-success mt-3 col-12">Salvar</button>

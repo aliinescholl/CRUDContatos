@@ -1,18 +1,19 @@
-﻿@{
-    ViewData["Title"] = "Contatos";
+﻿@model CRUDContatos.Models.ContatoCriacaoEdicao
+@{
+    ViewData["Title"] = "Criar - Contatos";
 }
-@model CRUDContatos.Models.ContatoCriacaoEdicao
+
 <div class="text-center">
 	<a asp-controller="Contato" asp-action="Index" class="btn btn-secondary">Voltar</a>
 	<h1 class="display-4">Criar novo contato</h1>
 </div>
 
 <form asp-action="CriarContato" asp-controller="Contato">
-    <label>Nome</label>
+    <label for="Nome">Nome</label>
     <input asp-for="Nome" class="form-control" placeholder="Nome completo" required />
 
     <div id="emails-container">
-        <label>Emails</label>
+        <label for="Emails">Emails</label>
         <div class="row mb-2">
             <div class="col-10">
                 <input name="ListaEmails" type="email" class="form-control" placeholder="Digite um e-mail válido"/>
@@ -22,11 +23,11 @@
         </div>
     </div>
 
-    <label>Telefone pessoal</label>
+    <label for="Telefone pessoal">Telefone pessoal</label>
     <input asp-for="TelefonePessoal" class="form-control" placeholder="(00) 99999-9999"/>
-    <label>Telefone comercial</label>
+    <label for="Telefone comercial">Telefone comercial</label>
     <input asp-for="TelefoneComercial" class="form-control" placeholder="(00) 3333-3333" />
-    <label>Empresa</label>
+    <label for="Nome da empresa">Empresa</label>
     <input asp-for="Empresa" class="form-control" placeholder="Nome da empresa" />
 
     <button type="submit" class="btn btn-success mt-3 col-12">Criar</button>

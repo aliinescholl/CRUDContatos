@@ -14,26 +14,27 @@
     <script>
         // as funções de adicionar e remover email foram adicionadas no layout pra não precisar repetir o código na view de editar
         // e criar
-        function adicionarEmailLista() {
-            var container = document.getElementById('emails-container');
-            var rows = container.querySelectorAll('.row');
-            var novo = rows[rows.length - 1].cloneNode(true);
+        const adicionarEmailLista = () => {
+            const container = document.getElementById('emails-container');
+            const rows = container.querySelectorAll('.row');
+            const novo = rows[rows.length - 1].cloneNode(true);
             novo.querySelector('input[name="ListaEmails"]').value = '';
             container.appendChild(novo);
             atualizarBotoesEmail();
         }
 
-        function removerEmail(btn) {
-            var row = btn.closest('.row');
+        const removerEmail = (btn) => {
+            // o método closest retorna o elemento ancestral mais próximo que combina com o seletor
+            const row = btn.closest('.row');
             row.remove();
             atualizarBotoesEmail();
         }
 
         // essa função controla quais botões vão aparecer dependendo de quantas linhas existem na tela
-        function atualizarBotoesEmail() {
-            var rows = document.querySelectorAll('#emails-container .row');
+        const atualizarBotoesEmail = () => {
+            const rows = document.querySelectorAll('#emails-container .row');
             rows.forEach(function (row, idx) {
-                var btnCol = row.querySelector('.col-2');
+                const btnCol = row.querySelector('.col-2');
                 btnCol.innerHTML = '';
 
                 if (rows.length === 1) {
@@ -45,11 +46,11 @@
                         `<button type="button" onclick="adicionarEmailLista()" class="btn btn-success me-1 col-6">
                             <i class="bi bi-plus-lg"></i>
                         </button>
-                        <button type="button" onclick="removerEmail(this)" class="btn btn-danger col-6">
+                        <button type="button" onclick="removerEmail()" class="btn btn-danger col-6">
                             <i class="bi bi-trash"></i>
                         </button>`;
                 } else {
-                    btnCol.innerHTML = `<button type="button" onclick="removerEmail(this)" class="btn btn-danger col-12">
+                    btnCol.innerHTML = `<button type="button" onclick="removerEmail()" class="btn btn-danger col-12">
                         <i class="bi bi-trash"></i>
                     </button>`;
                 }

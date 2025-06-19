@@ -5,7 +5,6 @@ Permite cadastrar, listar, editar e excluir contatos, incluindo múltiplos e-mail
 ---
 
 ## Funcionalidades
-
 - **Listar contatos:** Exibe todos os contatos cadastrados em uma tabela dinâmica (AJAX).
 - **Criar contato:** Formulário para cadastro de novo contato, com campos para nome, telefones, empresa e múltiplos e-mails.
 - **Editar contato:** Permite alterar os dados de um contato existente, inclusive adicionar/remover e-mails.
@@ -15,7 +14,6 @@ Permite cadastrar, listar, editar e excluir contatos, incluindo múltiplos e-mail
 ---
 
 ## Tecnologias Utilizadas
-
 - ASP.NET Core MVC (.NET 8)
 - Entity Framework Core (SQLite)
 - Bootstrap 5 e Bootstrap Icons
@@ -25,7 +23,6 @@ Permite cadastrar, listar, editar e excluir contatos, incluindo múltiplos e-mail
 ---
 
 ## Observações Técnicas
-
 - **AJAX:** A listagem e exclusão de contatos são feitas via AJAX.
 - **Validação:** O campo Nome é obrigatório. Os campos de e-mail aceitam múltiplos valores, adicionados dinamicamente.
 - **Banco de Dados:** Utiliza SQLite, fácil de rodar localmente sem necessidade de instalação de servidor.
